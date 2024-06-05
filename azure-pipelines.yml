@@ -1,69 +1,21 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
 trigger:
 - another-test
 
 pool:
   name: Laptop
-
-variables:
-  subscriptionId: ''
-  resourceGroup: ''
-  artifactsProjectName: ''
-  linuxVmName: ''
-  vmUsername: ''
-  vmPrivateKey: $(vmPrivateKeySecret)
   
-stages:
-- stage: AppBuild
-  displayName: 'Install Dependencies & Build'
-  jobs:
-  - job: Build  
-    steps:
-    - script: npm install  
-      displayName: 'Install dependencies'
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
 
-    - script: npm run build
-      displayName: 'Build application'
-    
-    # - task: CopyFiles@2
-    #   inputs:
-    #     SourceFolder: '.'
-    #     Contents: '**'
-    #     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    
-    - task: PublishBuildArtifacts@1
-      inputs:
-        # PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        PathtoPublish: '.'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
-
-# - stage: Publish Artifacts
-#   displayName: 'Publish to Azure Artifacts'
-#   jobs:
-#   - job: Publish  
-#     dependsOn: App Build  
-#     steps:
-#     - script: npm pack  
-#       displayName: 'Create package'
-
-#     - publish: '$(Build.ArtifactStagingDirectory)/*.tgz'  
-#       StoreAsTar: true
-#       publishLocation: 'Container'
-#       ArtifactName: 'drop'
-
-# - stage: Deploy to VM
-#   displayName: 'Deploy to Azure VM'
-#   jobs:
-#   - deployment: Deploy  
-#     condition: succeeded()  
-#     environment: 'Dev'  
-
-#     steps:
-#     - script: 
-#         curl -o $(Build.ArtifactStagingDirectory)/drop.tgz https://dev.azure.com/$(sunilchhabrams)/$(master)/_apis/build/builds/$(Build.BuildId)/artifacts?artifactName=drop&api-version=6.0-preview.3;
-#         tar -xvf $(Build.ArtifactStagingDirectory)/drop.tgz
-#       displayName: 'Download artifact from Azure Artifacts'
-
-#     - script:
-#         scp -i $(vmPrivateKey) $(Build.ArtifactStagingDirectory)/drop/* $(vmUsername)@$(linuxVmName.compute.internal):/
-#       displayName: 'Deploy artifact to Linux VM'
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
