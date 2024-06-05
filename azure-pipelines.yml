@@ -4,7 +4,12 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- another-test
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - MS1
 
 pool:
   name: Laptop
