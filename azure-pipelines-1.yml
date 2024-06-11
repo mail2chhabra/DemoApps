@@ -20,7 +20,7 @@ stages:
     steps:
     - task: UseNode@1
       inputs:
-        version: '17.91'
+        versionSpec: '17.91'
       displayName: 'Install Node.js'
 
     - script: |
