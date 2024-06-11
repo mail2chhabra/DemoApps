@@ -2,7 +2,7 @@ trigger:
 - another-test
 
 resources:
-- repo: js-e2e-express-server
+- repo: self
 
 pool:
   name: Laptop
